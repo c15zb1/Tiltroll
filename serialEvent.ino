@@ -8,31 +8,33 @@ void serialEvent(){
     char c = Serial.read();
     incomingData += c; //Serial data read in characters  - add to a string
   }
-  char dataArray[incomingData.length()+1]; 
-  incomingData.toCharArray(dataArray, sizeof(dataArray)); 
-  for(int ii = 0; ii < incomingData.length()+1; ii++){ //now make data into something useful
-    if((dataArray[ii] == '\n') || (dataArray[ii] == ',')){ //time for a new word/coordinate
-      inputData ++; 
-    } 
-    else {
-      if(inputData == 0) {
-        x += dataArray[ii];
-      }
-      else if(inputData == 1) {   
-        y += dataArray[ii];    
-      }
-      if(inputData == 2) {
-        z += dataArray[ii];
-      }
-      else if(inputData == 3) {   
-        xg += dataArray[ii];    
-      }
-      else if(inputData == 4) {   
-        yg += dataArray[ii];    
+  if(incomingData.length() > 12){
+    char dataArray[incomingData.length()+1]; 
+    incomingData.toCharArray(dataArray, sizeof(dataArray)); 
+    for(int ii = 0; ii < incomingData.length()+1; ii++){ //now make data into something useful
+      if((dataArray[ii] == '\n') || (dataArray[ii] == ',')){ //time for a new word/coordinate
+        inputData ++; 
+      } 
+      else {
+        if(inputData == 0) {
+          x += dataArray[ii];
+        }
+        else if(inputData == 1) {   
+          y += dataArray[ii];    
+        }
+        if(inputData == 2) {
+          z += dataArray[ii];
+        }
+        else if(inputData == 3) {   
+          xg += dataArray[ii];    
+        }
+        else if(inputData == 4) {   
+          yg += dataArray[ii];    
+        }
       }
     }
+    ready = true; //coordinates set, time to move on
   }
-  ready = true; //coordinates set, time to move on
 }
 
 void interpretSerial(){
@@ -66,6 +68,7 @@ void interpretSerial(){
     ready = false;
   }
 }
+
 
 
 

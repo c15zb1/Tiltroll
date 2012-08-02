@@ -65,7 +65,7 @@ void setup(){
 }
 
 void loop(){
-  Serial.println("In the loop");
+//  Serial.println("In the loop");
 
   //  ii = 0;
   //  while(Serial.read()!= '.');
