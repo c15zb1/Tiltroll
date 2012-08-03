@@ -7,16 +7,22 @@
 
 //Use DLINE
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(2,3);
+
 
 int Accx = 512;
 int Accy = 512;
 int Accz = 512;
 int Gyrox = 512;
 int Gyroy = 512;
+String SendString = "";
 
 void setup(){
-  mySerial.begin(9600);
+
+  pinMode (12, OUTPUT);
+  digitalWrite(12, HIGH);
+  SoftwareSerial mySerial(2,3);
+
+  Serial.begin(9600);
 }
 
 void loop(){
@@ -26,28 +32,42 @@ void loop(){
   Gyrox =analogRead(XGyro);
   Gyroy =analogRead(YGyro);
 
-  if(mySerial.available()) mySerial.print("Available");
-  mySerial.print(".");
-  if (Accx < 100) mySerial.print("0");
-  else if (Accx < 10) mySerial.print("00");
-  mySerial.print(Accx);
-    if (Accy < 100) mySerial.print("0");
-  else if (Accy < 10) mySerial.print("00");
-  mySerial.print(Accy);
-    if (Accz < 100) mySerial.print("0");
-  else if (Accz < 10) mySerial.print("00");
-  mySerial.print(Accz);
-    if (Gyrox < 100) mySerial.print("0");
-  else if (Gyrox < 10) mySerial.print("00");
-  mySerial.print(Gyrox);
-    if (Gyroy < 100) mySerial.print("0");
-  else if (Gyroy < 10) mySerial.print("00");
-  mySerial.print(Gyroy);
-  mySerial.print("\n"); 
+  if(Serial.available()) /*Serial.print("Available")*/;
 
+  SendString = "";
+  //  if (Accx < 100) Serial.print("0");
+  //  else if (Accx < 10) Serial.print("00");
+  //  Serial.print(Accx);
+  //    if (Accy < 100) Serial.print("0");
+  //  else if (Accy < 10) Serial.print("00");
+  //  Serial.print(Accy);
+  //    if (Accz < 100) Serial.print("0");
+  //  else if (Accz < 10) Serial.print("00");
+  //  Serial.print(Accz);
+  //    if (Gyrox < 100) Serial.print("0");
+  //  else if (Gyrox < 10) Serial.print("00");
+  //  Serial.print(Gyrox);
+  //    if (Gyroy < 100) Serial.print("0");
+  //  else if (Gyroy < 10) Serial.print("00");
+  //  Serial.print(Gyroy);
+  //  Serial.print("\n"); 
+
+  SendString += Accx;
+  SendString += ",";
+  SendString += Accy;
+  SendString += ",";
+  SendString += Accz;
+  SendString += ",";
+  SendString += Gyrox;
+  SendString += ",";
+  SendString += Gyroy;
+  SendString += '\n';
+  Serial.print(SendString);
   delay(100);
 
 }
+
+
 
 
 

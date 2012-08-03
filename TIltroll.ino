@@ -52,6 +52,10 @@ boolean ready = false;
 void setup(){
 
   //USE UART
+  pinMode(4, OUTPUT);
+  pinMode(7, OUTPUT);
+  digitalWrite(4, HIGH);
+  digitalWrite(7, HIGH);
   Serial.begin(9600);
   pinMode(INa1, OUTPUT);
   pinMode(INb1, OUTPUT);
@@ -65,7 +69,7 @@ void setup(){
 }
 
 void loop(){
-//  Serial.println("In the loop");
+  //  Serial.println("In the loop");
 
   //  ii = 0;
   //  while(Serial.read()!= '.');
@@ -148,11 +152,16 @@ void loop(){
   //  AccZ = getVals(data1.substring(coma2+1, coma3));
   //  GyroX = getVals(data1.substring(coma3+1, coma4));
   //  GyroY = getVals(data1.substring(coma4+1));
-
-  if(ready){
-    interpretSerial();  
-  }
-  setmotors(GyroX, GyroY);
+//
+//  if(ready){
+//    interpretSerial();  
+//  }
+//  
+  Serial.print("AccX: ");
+  Serial.print(AccX);
+  Serial.print("   AccY: ");
+  Serial.println(AccY);
+  setmotors(AccX, AccY);
 
 
   //  Serial.print("I got");
@@ -174,38 +183,37 @@ void loop(){
 
 void setmotors(int zAcc, int yAcc){
 
-  if(!cruise){
-    if (zAcc>=500 && zAcc<=524){
-      digitalWrite(INa1, HIGH);
-      digitalWrite(INb1, HIGH);
-      digitalWrite(INa2, HIGH);
-      digitalWrite(INb2, HIGH); 
-    }
-    else if (zAcc>524){
-      digitalWrite(INa1, LOW);
-      digitalWrite(INb1, HIGH);
-      digitalWrite(INa2, LOW);
-      digitalWrite(INb2, HIGH);
-    }
-    else if (zAcc<500){
-      digitalWrite(INa1, HIGH);
-      digitalWrite(INb1, LOW); 
-      digitalWrite(INa2, HIGH);
-      digitalWrite(INb2, LOW); 
-    }
-    speed1 = map(zAcc, 0, 1023, 0, 255);
-    speed2 = map(zAcc, 0, 1023, 0, 255);
-    turnFactor = map(yAcc, 0, 1023, -255 , 255);
-
-    if (turnFactor>24){
-      speed1 -= turnFactor; 
-    }
-    else if (turnFactor<-24){
-      speed2 -= -1*turnFactor;
-    }
-    analogWrite(PWM1, speed1);
-    analogWrite(PWM2, speed2);
+  if (zAcc>=440 && zAcc<=450){
+    digitalWrite(INa1, LOW);
+    digitalWrite(INb1, LOW);
+    digitalWrite(INa2, LOW);
+    digitalWrite(INb2, LOW); 
   }
+  else if (zAcc>450){
+    digitalWrite(INa1, LOW);
+    digitalWrite(INb1, HIGH);
+    digitalWrite(INa2, LOW);
+    digitalWrite(INb2, HIGH);
+  }
+  else if (zAcc<440){
+    digitalWrite(INa1, HIGH);
+    digitalWrite(INb1, LOW); 
+    digitalWrite(INa2, HIGH);
+    digitalWrite(INb2, LOW); 
+  }
+  speed1 = constrain(map(zAcc, 460, 400, 0, 255), 0, 255);
+  speed2 = constrain(map(zAcc, 370, 345, 0, 255), 0, 255);
+  turnFactor = constrain(map(yAcc, 430, 450, -255 , 255), -255, 255);
+
+  if (turnFactor>24){
+    speed1 -= turnFactor; 
+  }
+  else if (turnFactor<-24){
+    speed2 -= -1*turnFactor;
+  }
+  analogWrite(PWM1, speed1);
+  analogWrite(PWM2, speed2);
+
 }
 
 
@@ -222,6 +230,7 @@ int getVals(String in){
   else if(in.length() == 3)
     return 1000+((in.charAt(1)-48)*100)+((in.charAt(2)-48)*10)+(in.charAt(3)-48);
 }
+
 
 
 
